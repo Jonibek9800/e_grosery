@@ -6,6 +6,7 @@ import 'package:el_grocer/domain/blocs/products_bloc/products_bloc.dart';
 import 'package:el_grocer/domain/blocs/products_bloc/products_bloc_event.dart';
 import 'package:el_grocer/domain/blocs/themes/themes_model.dart';
 import 'package:el_grocer/domain/entity/product.dart';
+import 'package:el_grocer/routes/routes.dart';
 import 'package:el_grocer/widget/home_page/home_page_data.dart';
 import 'package:el_grocer/widget/main_page/main_page_bloc.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +36,10 @@ class HomePageWidget extends StatelessWidget {
                 Navigator.of(context).pushNamed("/search_page");
               },
               autofocus: false,
-              appbarLeading: TextButton(
-                onPressed: () {},
+              appbarTitle: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(MainNavigationRouteNames.location);
+                },
                 child: const Row(
                   children: [
                     Icon(

@@ -1,5 +1,7 @@
 import 'package:el_grocer/widget/auth/auth_widget.dart';
 import 'package:el_grocer/widget/cart_page/cart_page_widget.dart';
+import 'package:el_grocer/widget/location_page/confirm_location_widget.dart';
+import 'package:el_grocer/widget/location_page/location_page_widget.dart';
 import 'package:el_grocer/widget/main_page/main_page_widget.dart';
 import 'package:el_grocer/widget/orders_page/order_details_widget.dart';
 import 'package:el_grocer/widget/orders_page/order_page_widget.dart';
@@ -26,6 +28,7 @@ abstract class MainNavigationRouteNames {
   static const allOrders = "profile/orders";
   static const orderDetails = "profile/orders/details";
   static const location = "/location";
+  static const confirmLocation = '/location/confirm';
 
   static const productByCategory = "/categories/product_by_category";
 }
@@ -46,6 +49,9 @@ class Routes {
       MainNavigationRouteNames.checkout: (_) => const CheckoutWidget(),
       MainNavigationRouteNames.allOrders: (_) => const OrdersWidget(),
       MainNavigationRouteNames.orderDetails: (_) => const OrderDetailsWidget(),
+      MainNavigationRouteNames.location: (_) => const LocationWidget(),
+      MainNavigationRouteNames.confirmLocation: (_) => const ConfirmLocationWidget(),
+
     };
   }
 
