@@ -58,12 +58,13 @@ class ThemesModel {
         iconTheme: IconThemeData(color: ThemeColor.darkColor)),
     elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(ThemeColor.greenColor))),
+            backgroundColor: MaterialStatePropertyAll(ThemeColor.greenColor),
+            textStyle: MaterialStatePropertyAll(
+                TextStyle(color: ThemeColor.darkColor)))),
     brightness: Brightness.light,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         selectedItemColor: ThemeColor.greenColor,
         unselectedItemColor: ThemeColor.greyColor,
-        // backgroundColor: ThemeColor.greyColor,
         unselectedLabelStyle: TextStyle(color: ThemeColor.darkColor)),
     useMaterial3: true,
   );

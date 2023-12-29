@@ -10,6 +10,7 @@ class CartBlocModel {
   var productQuantity = 0;
   List<Check> checks = [];
   Check? checkDetail;
+  // bool? orderState;
 
 
   int cartQty() {

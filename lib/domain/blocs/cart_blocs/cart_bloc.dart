@@ -149,10 +149,10 @@ class CartBloc extends Bloc<CartBlocEvent, CartBlocState> {
 
   void onOrderEvent(event, Emitter emit) async {
     emit(LoadCartState(cartBlocModel: currentState));
-    final data = await OrderNetwork.createCheckDetails(
+    await OrderNetwork.createCheckDetails(
         listOfCart: currentState.cartProductList, userId: event.userId);
     await SQLHelper.deleteProducts();
-    debugPrint("cart bloc message: ${data['message']}");
+    // currentState.orderState = data["success"];
     currentState.cartProductList = [];
     emit(InitCartState(cartBlocModel: currentState));
   }

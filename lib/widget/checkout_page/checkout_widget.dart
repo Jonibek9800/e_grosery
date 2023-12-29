@@ -2,6 +2,8 @@ import 'package:el_grocer/domain/blocs/auth_bloc/auth_bloc.dart';
 import 'package:el_grocer/domain/blocs/cart_blocs/cart_bloc.dart';
 import 'package:el_grocer/domain/blocs/cart_blocs/cart_bloc_event.dart';
 import 'package:el_grocer/domain/blocs/cart_blocs/cart_bloc_state.dart';
+import 'package:el_grocer/domain/blocs/location_cubit/location_cubit.dart';
+import 'package:el_grocer/domain/blocs/themes/themes_model.dart';
 import 'package:el_grocer/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,12 +11,13 @@ import 'package:intl/intl.dart';
 
 import '../loader_page/loader_view_cubit.dart';
 
-
 class CheckoutWidget extends StatelessWidget {
   const CheckoutWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final address =
+        context.read<LocationCubit>().state.locationCubitModel.address;
     return Scaffold(
       // backgroundColor: const Color(0xFF151A20),
       appBar: AppBar(
@@ -29,23 +32,24 @@ class CheckoutWidget extends StatelessWidget {
       body: Stack(
         children: [
           ListView(
+            padding: const EdgeInsets.only(bottom: 165),
             children: [
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: const Card(
+                  child: Card(
                     child: Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Address Details",
                             // style: TextStyle(color: Colors.white),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
@@ -53,7 +57,7 @@ class CheckoutWidget extends StatelessWidget {
                             // style: TextStyle(color: Colors.white),
                           ),
                           Text(
-                            "Dushanbe, Ayni Street 73",
+                            address ?? "$address",
                             // style: TextStyle(color: Colors.grey),
                           ),
                           Text(
@@ -227,18 +231,57 @@ class CheckoutWidget extends StatelessWidget {
                                     backgroundColor: MaterialStatePropertyAll(
                                         Color(0xFF56AE7C))),
                                 onPressed: () {
-                                  final user = context
-                                      .read<AuthBloc>()
-                                      .state
-                                      .authModel
-                                      .user;
-                                  if(user != null ) {
-                                  context.read<CartBloc>().add(
-                                      OrderByCartEvent(userId: user['id']));
-                                  Navigator.pushReplacementNamed(context,
-                                      MainNavigationRouteNames.loaderWidget);
-                                  context.read<LoaderViewCubit>().onUnknown();
-                                  }
+                                  // if (state is! LoadCartState) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Order access"),
+                                            content: Text(
+                                              "Your order has been successfully completed",
+                                              style: TextStyle(
+                                                  color: ThemeColor.greenColor),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    final user = context
+                                                        .read<AuthBloc>()
+                                                        .state
+                                                        .authModel
+                                                        .user;
+                                                    if (user != null) {
+                                                      context
+                                                          .read<CartBloc>()
+                                                          .add(OrderByCartEvent(
+                                                              userId:
+                                                                  user['id']));
+                                                      Navigator.pushReplacementNamed(
+                                                          context,
+                                                          MainNavigationRouteNames
+                                                              .loaderWidget);
+                                                      context
+                                                          .read<
+                                                              LoaderViewCubit>()
+                                                          .onUnknown();
+                                                    }
+                                                  },
+                                                  child: const Text("Ok"))
+                                            ],
+                                          );
+                                        });
+                                  // } else {
+                                  //   showDialog(
+                                  //       context: context,
+                                  //       builder: (context) {
+                                  //         return AlertDialog(
+                                  //           content: Center(
+                                  //             child:
+                                  //                 CircularProgressIndicator(),
+                                  //           ),
+                                  //         );
+                                  //       });
+                                  // }
                                 },
                                 child: state is LoadCartState
                                     ? const Center(

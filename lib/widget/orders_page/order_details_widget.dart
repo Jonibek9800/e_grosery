@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:el_grocer/domain/blocs/cart_blocs/cart_bloc.dart';
 import 'package:el_grocer/domain/blocs/cart_blocs/cart_bloc_state.dart';
+import 'package:el_grocer/domain/blocs/location_cubit/location_cubit.dart';
 import 'package:el_grocer/domain/blocs/themes/themes_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,7 @@ class OrderDetailsWidget extends StatelessWidget {
       final formatDate = DateTime.parse(details?.createdAt ?? "");
       final date = DateFormat.yMd().format(formatDate);
       final time = DateFormat.Hms().format(formatDate);
+      final address = context.read<LocationCubit>().state.locationCubitModel.address;
       return Scaffold(
         appBar: AppBar(
           title: const Text("Order summary"),
@@ -123,7 +125,7 @@ class OrderDetailsWidget extends StatelessWidget {
                 );
               },
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(8.0),
               child: Card(
                 child: Column(
@@ -133,7 +135,7 @@ class OrderDetailsWidget extends StatelessWidget {
                       padding: EdgeInsets.all(8.0),
                       child: Text("Delivery Information"),
                     ),
-                    Divider(
+                    const Divider(
                       height: 1,
                     ),
                     Padding(
@@ -141,9 +143,9 @@ class OrderDetailsWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Delivery to"),
+                          const Text("Delivery to"),
                           Text(
-                            "Ayni Street 73, Dushanbe, Tajikistan, Jony, 001777786",
+                            "${address ?? address}, Dushanbe, Tajikistan, Jony, 001777786",
                             maxLines: 3,
                           ),
                         ],

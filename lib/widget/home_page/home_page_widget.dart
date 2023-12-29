@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:el_grocer/domain/blocs/auth_bloc/auth_bloc.dart';
 import 'package:el_grocer/domain/blocs/categories_bloc/categories_bloc.dart';
 import 'package:el_grocer/domain/blocs/categories_bloc/categories_state.dart';
+import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit.dart';
+import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit_state.dart';
+import 'package:el_grocer/domain/blocs/location_cubit/location_cubit.dart';
 import 'package:el_grocer/domain/blocs/products_bloc/products_bloc.dart';
 import 'package:el_grocer/domain/blocs/products_bloc/products_bloc_event.dart';
 import 'package:el_grocer/domain/blocs/themes/themes_model.dart';
@@ -26,6 +30,8 @@ class HomePageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final address =
+        context.read<LocationCubit>().state.locationCubitModel.address;
     return Scaffold(
         appBar: PreferredSize(
             preferredSize:
@@ -38,17 +44,26 @@ class HomePageWidget extends StatelessWidget {
               autofocus: false,
               appbarTitle: TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(MainNavigationRouteNames.location);
+                  Navigator.of(context)
+                      .pushNamed(MainNavigationRouteNames.location);
                 },
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_pin,
                       color: Color(0xFF56AE7C),
                     ),
-                    Text(
-                      "Delivery to",
-                      // style: TextStyle(color: Colors.white),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Delivery to",
+                          // style: TextStyle(),
+                        ),
+                        Text(
+                          address ?? "",
+                        ),
+                      ],
                     )
                   ],
                 ),
@@ -71,13 +86,11 @@ class HomePageWidget extends StatelessWidget {
                   reverse: false,
                   autoPlay: true,
                   autoPlayInterval: const Duration(seconds: 5),
-                  autoPlayAnimationDuration:
-                      const Duration(milliseconds: 800),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
                   autoPlayCurve: Curves.easeInOut,
                 ),
                 itemCount: HomePageData.items.length,
-                itemBuilder:
-                    (BuildContext context, int index, int realIndex) {
+                itemBuilder: (BuildContext context, int index, int realIndex) {
                   final item = HomePageData.items[index];
                   return Container(
                       width: MediaQuery.of(context).size.width,
@@ -273,7 +286,8 @@ class _CategoriesWidget extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     // primary: false,
                     padding: const EdgeInsets.all(10),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                       crossAxisCount: 3,
@@ -282,13 +296,13 @@ class _CategoriesWidget extends StatelessWidget {
                       final category = categories[index];
                       return Container(
                         decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.circular(5)
-                        ),
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.circular(5)),
                         child: InkWell(
                           onTap: () {
                             context.read<ProductsBloc>().add(
-                                GetProductByCategoryEvent(categoryId: category.id));
+                                GetProductByCategoryEvent(
+                                    categoryId: category.id));
                             Navigator.of(context)
                                 .pushNamed('/categories/product_by_category');
                           },
@@ -304,7 +318,9 @@ class _CategoriesWidget extends StatelessWidget {
                                     ? CachedNetworkImage(
                                         imageUrl: category.getCategoryImage(),
                                         placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
+                                            const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
                                         height: 80,
@@ -350,6 +366,13 @@ class _ScrollBarListProductWidget extends StatelessWidget {
           itemCount: productList.length,
           itemBuilder: (BuildContext context, int index) {
             final product = productList[index];
+            IconData? icon = (context
+                    .read<FavoriteCubit>()
+                    .state
+                    .favoriteModel
+                    .isFavorite(product.id)
+                ? Icons.favorite
+                : Icons.favorite_border);
             return Card(
               child: Container(
                   width: 170,
@@ -376,16 +399,34 @@ class _ScrollBarListProductWidget extends StatelessWidget {
                                 fit: BoxFit.fill,
                               ),
                             ),
-                            Positioned(
-                                right: 0,
-                                top: 5,
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.green,
-                                  ),
-                                ))
+                            BlocBuilder<FavoriteCubit, FavoriteCubitState>(
+                                builder: (BuildContext context, state) {
+                              return Positioned(
+                                  right: 0,
+                                  top: 5,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      final user = context
+                                          .read<AuthBloc>()
+                                          .state
+                                          .authModel
+                                          .user;
+                                      context
+                                          .read<FavoriteCubit>()
+                                          .toggleFavorite(user?['id'], product);
+                                    },
+                                    icon: Icon(
+                                      context
+                                              .read<FavoriteCubit>()
+                                              .state
+                                              .favoriteModel
+                                              .isFavorite(product.id)
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: ThemeColor.greenColor,
+                                    ),
+                                  ));
+                            })
                           ],
                         ),
                         Padding(
@@ -420,7 +461,8 @@ class _ScrollBarListProductWidget extends StatelessWidget {
                               builder: (BuildContext context, state) {
                             if (state.cartBlocModel.isAddToCart(product)) {
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   state.cartBlocModel.productQuantity == 1
                                       ? TextButton(
@@ -450,7 +492,8 @@ class _ScrollBarListProductWidget extends StatelessWidget {
                                   TextButton(
                                     onPressed: () => context
                                         .read<CartBloc>()
-                                        .add(AddQuantityEvent(product: product)),
+                                        .add(
+                                            AddQuantityEvent(product: product)),
                                     child: const Icon(
                                       Icons.add,
                                       // color: Colors.green,

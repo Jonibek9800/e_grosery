@@ -11,7 +11,9 @@ void main() {
     expect(File(AppImages.earth).existsSync(), isTrue);
     expect(File(AppImages.horse).existsSync(), isTrue);
     expect(File(AppImages.lilyBanse).existsSync(), isTrue);
+    expect(File(AppImages.location).existsSync(), isTrue);
     expect(File(AppImages.moto).existsSync(), isTrue);
+    expect(File(AppImages.pin).existsSync(), isTrue);
     expect(File(AppImages.prototype).existsSync(), isTrue);
   });
 }

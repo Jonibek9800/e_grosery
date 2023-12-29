@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/blocs/cart_blocs/cart_bloc_event.dart';
+import '../../domain/blocs/favorite_cubit/favorite_cubit.dart';
 
 class CartPageWidget extends StatelessWidget {
   const CartPageWidget({super.key});
@@ -28,11 +29,12 @@ class CartPageWidget extends StatelessWidget {
         body: BlocBuilder<CartBloc, CartBlocState>(
             builder: (BuildContext context, CartBlocState cartState) {
           final products = cartState.cartBlocModel.cartProductList;
+
           if (cartState.cartBlocModel.cartQty() == 0) {
             return DecoratedBox(
               decoration: const BoxDecoration(
-                // color: Color(0xFF151A20),
-              ),
+                  // color: Color(0xFF151A20),
+                  ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -81,6 +83,10 @@ class CartPageWidget extends StatelessWidget {
                       itemCount: products.length,
                       itemBuilder: (BuildContext context, int index) {
                         final cartProduct = products[index];
+                        final user =
+                            context.read<AuthBloc>().state.authModel.user;
+                        final favoriteCubit = context.read<FavoriteCubit>();
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 5),
@@ -95,8 +101,10 @@ class CartPageWidget extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     child: CachedNetworkImage(
                                       imageUrl: cartProduct.product!.getImage(),
-                                      placeholder: (context, url) => const Center(
-                                          child: CircularProgressIndicator()),
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                              child:
+                                                  CircularProgressIndicator()),
                                       errorWidget: (context, url, error) =>
                                           const Icon(Icons.error),
                                       height: 150,
@@ -132,7 +140,8 @@ class CartPageWidget extends StatelessWidget {
                                           height: 10,
                                         ),
                                         Text(
-                                          cartProduct.product?.description ?? '',
+                                          cartProduct.product?.description ??
+                                              '',
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           // style: const TextStyle(
@@ -145,7 +154,11 @@ class CartPageWidget extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            favoriteCubit.toggleFavorite(
+                                                user?['id'],
+                                                cartProduct.product);
+                                          },
                                           icon: const Icon(
                                             Icons.favorite_border,
                                             color: Color(0xFF56AE7C),
@@ -154,7 +167,8 @@ class CartPageWidget extends StatelessWidget {
                                         height: 40,
                                       ),
                                       BlocBuilder<CartBloc, CartBlocState>(
-                                          builder: (BuildContext context, state) {
+                                          builder:
+                                              (BuildContext context, state) {
                                         return Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -222,15 +236,16 @@ class CartPageWidget extends StatelessWidget {
                       child: Card(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              // color: const Color(0xFF212934)
+                            borderRadius: BorderRadius.circular(5),
+                            // color: const Color(0xFF212934)
                           ),
                           child: BlocBuilder<AuthBloc, AuthBlocState>(
                               builder: (BuildContext context, state) {
                             return Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Row(
                                     mainAxisAlignment:

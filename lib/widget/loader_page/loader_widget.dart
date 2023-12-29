@@ -1,4 +1,5 @@
 import 'package:el_grocer/domain/blocs/categories_bloc/categories_event.dart';
+import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit.dart';
 import 'package:el_grocer/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,6 +80,7 @@ class _LoaderWidgetState extends State<LoaderWidget> {
     context.read<ProductsBloc>().add(GetLimitProductEvent());
     if (user != null) {
       context.read<CartBloc>().add(InitCartEvent());
+      context.read<FavoriteCubit>().getFavorite(user['id']);
     } else {
       context.read<CartBloc>().state.cartBlocModel.cartProductList = [];
     }

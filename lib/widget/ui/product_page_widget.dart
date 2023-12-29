@@ -8,7 +8,7 @@ import '../../domain/blocs/cart_blocs/cart_bloc_event.dart';
 import '../../domain/blocs/cart_blocs/cart_bloc_state.dart';
 
 class ProductPageWidget extends StatelessWidget {
-  final Product product;
+  final Product? product;
 
   const ProductPageWidget({super.key, required this.product});
 
@@ -17,17 +17,19 @@ class ProductPageWidget extends StatelessWidget {
     return Card(
       child: DecoratedBox(
         decoration: BoxDecoration(
-            // color: const Color(0xFF212934),
-            borderRadius: BorderRadius.circular(10),),
+          // color: const Color(0xFF212934),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Row(
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
-                    imageUrl: product.getImage(),
+                    imageUrl: product?.getImage() ?? '',
                     placeholder: (context, url) =>
                         const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                     height: 155,
                     width: 130,
                     fit: BoxFit.fill)),
@@ -42,23 +44,21 @@ class ProductPageWidget extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    product.name ?? "",
+                    product?.name ?? "",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    // style: const TextStyle(color: Colors.white),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "\$${product.price}" ?? "",
-                    // style: const TextStyle(color: Color(0xFF56AE7C)),
+                    "\$${product?.price}",
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    product.description ?? '',
+                    product?.description ?? '',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     // style: const TextStyle(color: Colors.white),

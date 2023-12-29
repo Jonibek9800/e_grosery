@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 import '../../configuration/configuration.dart';
 import '../data_provider/session_data_provider.dart';
-import 'apiClientException.dart';
+import 'api_client_exception.dart';
 
 abstract class NetworkClient {
   static final sessionDataProvider = SessionDataProvider();
