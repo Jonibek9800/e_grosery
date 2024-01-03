@@ -3,10 +3,8 @@ import 'package:el_grocer/domain/api_client/orders_api.dart';
 import 'package:el_grocer/domain/api_client/product_api.dart';
 import 'package:el_grocer/domain/blocs/cart_blocs/sqflite.dart';
 import 'package:el_grocer/domain/entity/check.dart';
-import 'package:el_grocer/domain/entity/check_details.dart';
 import 'package:el_grocer/domain/entity/product.dart';
 import 'package:el_grocer/domain/entity/product_cart.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'cart_bloc_event.dart';
 import 'cart_bloc_model.dart';
@@ -134,7 +132,7 @@ class CartBloc extends Bloc<CartBlocEvent, CartBlocState> {
   Future<void> getProductsById(Emitter emit) async {
     final productApiClient = ProductApiClient();
     int page = 1;
-    final response = await productApiClient.getAllProducts(null, page);
+    final response = await productApiClient.getAllProducts(null, page, "id", "asc");
     final products = (response['data'] as List).map((e) => Product.fromJson(e));
     currentState.cartProductList = [];
     for (var element in products) {

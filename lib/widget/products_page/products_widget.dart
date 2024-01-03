@@ -27,7 +27,7 @@ class _ProductsWidgetState extends State<ProductsWidget> {
     super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        context.read<ProductsBloc>().add(GetNextProductPageEvent());
+        context.read<ProductsBloc>().add(GetNextProductPageEvent(sortMethod: 'asc', sortName: 'id'));
       }
     });
   }

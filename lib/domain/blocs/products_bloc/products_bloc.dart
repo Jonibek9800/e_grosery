@@ -20,7 +20,8 @@ class ProductsBloc extends Bloc<ProductsBlocEvent, ProductsBlocState> {
         currentState.allProducts.clear();
         currentState.currentPage = 1;
         emit(GetAllProductsState(productsBlocModel: currentState));
-        final response = await productsApiClient.getAllProducts(null, currentState.currentPage);
+        final response =
+            await productsApiClient.getAllProducts(null, currentState.currentPage, 'id', 'asc');
         log("$response");
         var productList = (response['data'] as List).map((e) => Product.fromJson(e)).toList();
         currentState.addAndPagination(list: productList);
@@ -33,7 +34,7 @@ class ProductsBloc extends Bloc<ProductsBlocEvent, ProductsBlocState> {
     on<GetLimitProductEvent>((event, emit) async {
       try {
         currentState.filteredProducts = [];
-        currentState.limitProducts = await productsApiClient.getLimitProducts(8);
+        currentState.limitProducts = await productsApiClient.getLimitProducts(8, 'id', 'asc');
         emit(GetLimitProductsState(productsBlocModel: currentState));
       } catch (e) {
         emit(ErrorProductsState(productsBlocModel: currentState));
@@ -41,8 +42,12 @@ class ProductsBloc extends Bloc<ProductsBlocEvent, ProductsBlocState> {
     });
     on<GetSearchProductEvent>((event, emit) async {
       try {
-        final response =
-            await productsApiClient.getAllProducts(currentState.searchController.text, null);
+        final response = await productsApiClient.getAllProducts(
+          currentState.searchController.text,
+          null,
+          event.sortName,
+          event.sortMethod,
+        );
         currentState.filteredProducts =
             (response['data'] as List).map((e) => Product.fromJson(e)).toList();
         emit(GetSearchProductsState(productsBlocModel: currentState));
@@ -65,7 +70,12 @@ class ProductsBloc extends Bloc<ProductsBlocEvent, ProductsBlocState> {
       // if (event.index == currentState.allProducts.length - 1) {
       if (currentState.allProducts.length >= (currentState.totalCount ?? 0)) return;
 
-      final response = await productsApiClient.getAllProducts(null, currentState.currentPage);
+      final response = await productsApiClient.getAllProducts(
+        null,
+        currentState.currentPage,
+        event.sortName,
+        event.sortMethod,
+      );
       // currentState.currentPage = response["current_page"];
       final allProducts = (response['data'] as List).map((e) => Product.fromJson(e)).toList();
 
@@ -76,8 +86,12 @@ class ProductsBloc extends Bloc<ProductsBlocEvent, ProductsBlocState> {
     });
     on<SpeechToTextControllerEvent>((event, emit) async {
       currentState.searchController.text = event.text ?? "";
-      final response =
-          await productsApiClient.getAllProducts(currentState.searchController.text, null);
+      final response = await productsApiClient.getAllProducts(
+        currentState.searchController.text,
+        null,
+        event.sortName,
+        event.sortMethod,
+      );
       currentState.filteredProducts =
           (response['data'] as List).map((e) => Product.fromJson(e)).toList();
       emit(InitProductsState(productsBlocModel: currentState));

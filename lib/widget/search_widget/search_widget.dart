@@ -32,7 +32,9 @@ class _SearchWidgetState extends State<SearchWidget> {
     super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        context.read<ProductsBloc>().add(GetNextProductPageEvent());
+        context
+            .read<ProductsBloc>()
+            .add(GetNextProductPageEvent(sortMethod: 'asc', sortName: 'id'));
       }
     });
     _initSpeech();
@@ -81,11 +83,15 @@ class _SearchWidgetState extends State<SearchWidget> {
                 "Search",
               ),
               onChange: (text) {
-                context.read<ProductsBloc>().add(GetSearchProductEvent());
+                context
+                    .read<ProductsBloc>()
+                    .add(GetSearchProductEvent(sortMethod: 'asc', sortName: 'id'));
               },
               implyLeading: true,
               voiceCallback: () {
-                context.read<ProductsBloc>().add(SpeechToTextControllerEvent(text: ''));
+                context
+                    .read<ProductsBloc>()
+                    .add(SpeechToTextControllerEvent(text: '', sortName: 'id', sortMethod: 'asc'));
                 showModalBottomSheet(
                     isDismissible: false,
                     elevation: 0.3,
@@ -111,9 +117,11 @@ class _SearchWidgetState extends State<SearchWidget> {
                               children: [
                                 IconButton(
                                     onPressed: () {
-                                      context
-                                          .read<ProductsBloc>()
-                                          .add(SpeechToTextControllerEvent(text: _lastWords));
+                                      context.read<ProductsBloc>().add(SpeechToTextControllerEvent(
+                                            text: _lastWords,
+                                            sortName: 'id',
+                                            sortMethod: 'asc',
+                                          ));
                                       Navigator.of(context).pop();
                                       _stopListening();
                                     },
