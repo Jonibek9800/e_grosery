@@ -1,3 +1,4 @@
+import 'package:el_grocer/routes/routes.dart';
 import 'package:el_grocer/widget/ui/product_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +14,7 @@ class ProductsByCategoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize:
-                Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
+            preferredSize: Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
             child: AppBarWidget(
               readOnly: true,
               onTap: () {
@@ -32,6 +32,9 @@ class ProductsByCategoryWidget extends StatelessWidget {
                 style: TextStyle(color: Color(0xFF56AE7C)),
               ),
               implyLeading: true,
+              voiceCallback: () {
+                Navigator.of(context).pushNamed(MainNavigationRouteNames.searchPage);
+              },
             )),
         body: BlocBuilder<ProductsBloc, ProductsBlocState>(
           builder: (BuildContext contexts, state) {

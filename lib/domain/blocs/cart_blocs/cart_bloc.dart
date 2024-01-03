@@ -133,7 +133,9 @@ class CartBloc extends Bloc<CartBlocEvent, CartBlocState> {
 
   Future<void> getProductsById(Emitter emit) async {
     final productApiClient = ProductApiClient();
-    final products = await productApiClient.getAllProducts(null);
+    int page = 1;
+    final response = await productApiClient.getAllProducts(null, page);
+    final products = (response['data'] as List).map((e) => Product.fromJson(e));
     currentState.cartProductList = [];
     for (var element in products) {
       for (var item in currentState.productInCart) {

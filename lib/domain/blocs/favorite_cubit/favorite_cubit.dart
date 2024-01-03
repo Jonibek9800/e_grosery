@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:el_grocer/domain/api_client/favorite_api.dart';
 import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit_state.dart';
 import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_model.dart';
@@ -12,25 +13,19 @@ class FavoriteCubit extends Cubit<FavoriteCubitState> {
   void toggleFavorite(userId, Product? product) async {
     try {
       final current = state.favoriteModel;
-      final index = current.favoriteList.indexWhere((element) => element.productId == product?.id);
-      if (index == -1) {
-        final data = await FavoriteApi.setFavoriteProduct(
-            userId: userId, productId: product?.id);
-        final favoriteProduct = data['favorite_product'];
+      if ((product?.checkFavoriteInServer ?? false)) return;
+      var favorite = current.favoriteList
+          .firstWhereOrNull((element) => element.productId == product?.id);
+      product?.isInFavorite = !product.isInFavorite;
+      emit(InitialFavoriteState(favoriteModel: current));
+      await product?.getIsFavorite(userId);
+      emit(InitialFavoriteState(favoriteModel: current));
+      if ((product?.isInFavorite ?? false) && favorite == null) {
         current.favoriteList.add(
-          Favorite(
-              id: favoriteProduct['id'],
-              userId: userId,
-              productId: product?.id,
-              product: product,
-              createdAt: favoriteProduct['created_at'],
-              updatedAt: favoriteProduct['updated_at']),
-        );
+            Favorite(userId: userId, productId: product?.id, product: product));
       } else {
-        final newList = current.favoriteList
-            .where((element) => element.productId != product?.id).toList();
-        current.favoriteList = newList;
-        await FavoriteApi.removeFavorite(userId: userId, productId: product?.id);
+        current.favoriteList
+            .removeWhere((element) => element.productId == product?.id);
       }
       // getFavorite(userId);
       emit(InitialFavoriteState(favoriteModel: current));

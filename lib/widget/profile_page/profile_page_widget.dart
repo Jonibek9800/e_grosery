@@ -158,7 +158,9 @@ class ProfilePageWidget extends StatelessWidget {
                       ),
                       Card(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).pushNamed(MainNavigationRouteNames.cartPage);
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -201,11 +203,14 @@ class ProfilePageWidget extends StatelessWidget {
                           showBottomSheet(
                               context: context,
                               builder: (_) {
-                                return Container(
+                                return SizedBox(
                                   // color: const Color(0xFF212934),
-                                  height: 120,
-                                  child: const Center(
-                                    child: _RadioListThemes(),
+                                  height: 180,
+                                  child: Scaffold(
+                                    appBar: AppBar(title: const Text("Themes"), centerTitle: true,),
+                                    body: const Center(
+                                      child: _RadioListThemes(),
+                                    ),
                                   ),
                                 );
                               });

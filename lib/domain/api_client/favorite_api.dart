@@ -1,20 +1,25 @@
 import 'package:el_grocer/domain/api_client/network_client.dart';
+import 'package:flutter/cupertino.dart';
 
 class FavoriteApi {
   static Future<Map<String, dynamic>> setFavoriteProduct({
     required userId,
     required productId,
+    required bool deleting,
   }) async {
     Map<String, dynamic> result = {};
     try {
       Map<String, dynamic> params = {
         "user_id": userId,
-        "product_id": productId
+        "product_id": productId,
+        'deleting': deleting,
       };
-      final response = await NetworkClient.dio
-          .post("/create/favorite", queryParameters: params);
+      final response =
+          await NetworkClient.dio.post("/toggle/favorite", data: params);
+      debugPrint("error: ${response.data}");
       result = response.data;
     } catch (err) {
+      debugPrint("error: $err");
       result = {"error": err};
     }
     return result;
@@ -35,8 +40,9 @@ class FavoriteApi {
     return result;
   }
 
-  static Future<void> removeFavorite({required userId, required productId}) async {
-    await NetworkClient.dio
-        .delete("/delete/favorite", queryParameters: {"user_id": userId, "product_id": productId});
-  }
+  // static Future<void> removeFavorite(
+  //     {required userId, required productId}) async {
+  //   await NetworkClient.dio.delete("/delete/favorite",
+  //       queryParameters: {"user_id": userId, "product_id": productId});
+  // }
 }

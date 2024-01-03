@@ -36,3 +36,9 @@ class ErrorProductsState extends ProductsBlocState {
   ErrorProductsState({required ProductsBlocModel productsBlocModel})
       : super(productsBlocModel: productsBlocModel);
 }
+
+
+class GetNextProductPageState extends ProductsBlocState {
+  GetNextProductPageState({required ProductsBlocModel productsBlocModel})
+      : super(productsBlocModel: productsBlocModel);
+}

@@ -4,7 +4,6 @@ abstract class ProductsBlocEvent {
 
 
 class GetAllProductsEvent extends ProductsBlocEvent {
-
 }
 
 class GetLimitProductEvent extends ProductsBlocEvent {
@@ -18,6 +17,12 @@ class GetProductByCategoryEvent extends ProductsBlocEvent {
 }
 
 class GetSearchProductEvent extends ProductsBlocEvent {
-  String? searchText;
-  GetSearchProductEvent({required this.searchText});
+}
+
+class GetNextProductPageEvent extends ProductsBlocEvent {
+}
+
+class SpeechToTextControllerEvent extends ProductsBlocEvent {
+  String? text;
+  SpeechToTextControllerEvent({required this.text});
 }

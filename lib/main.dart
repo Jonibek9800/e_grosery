@@ -5,6 +5,7 @@ import 'package:el_grocer/domain/blocs/categories_bloc/categories_bloc.dart';
 import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit.dart';
 import 'package:el_grocer/domain/blocs/location_cubit/location_cubit.dart';
 import 'package:el_grocer/domain/blocs/products_bloc/products_bloc.dart';
+import 'package:el_grocer/domain/blocs/sort_bloc/sort_bloc.dart';
 import 'package:el_grocer/domain/blocs/themes/themes_bloc.dart';
 import 'package:el_grocer/routes/routes.dart';
 import 'package:el_grocer/widget/auth/auth_cubit.dart';
@@ -32,6 +33,7 @@ void main() async {
     BlocProvider(create: (_) => ThemesBloc()),
     BlocProvider(create: (_) => LocationCubit()),
     BlocProvider(create: (_) => FavoriteCubit()),
+    BlocProvider(create: (_) => SortBloc()),
   ], child: const MyApp()));
 }
 
@@ -44,8 +46,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemesBloc, ThemesBlocState>(
-        builder: (BuildContext context, state) {
+    return BlocBuilder<ThemesBloc, ThemesBlocState>(builder: (BuildContext context, state) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',

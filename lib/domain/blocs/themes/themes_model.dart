@@ -69,5 +69,5 @@ class ThemesModel {
     useMaterial3: true,
   );
 
-  ThemesState? currentState = ThemesState.light;
+  ThemesState? currentState = ThemesState.dark;
 }

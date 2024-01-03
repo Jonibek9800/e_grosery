@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:el_grocer/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,8 +17,7 @@ class CategoriesWidget extends StatelessWidget {
     return Scaffold(
       // backgroundColor: const Color(0xFF151A20),
       appBar: PreferredSize(
-          preferredSize:
-              Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
+          preferredSize: Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
           child: AppBarWidget(
             readOnly: true,
             onTap: () {
@@ -26,9 +26,11 @@ class CategoriesWidget extends StatelessWidget {
             autofocus: false,
             appbarTitle: const Text(
               "Categories",
-              // style: TextStyle(color: Color(0xFF56AE7C)),
             ),
             implyLeading: false,
+            voiceCallback: () {
+              Navigator.of(context).pushNamed(MainNavigationRouteNames.searchPage);
+            },
           )),
       body: BlocBuilder<CategoriesBloc, CategoriesState>(
         builder: (BuildContext context, state) {
@@ -54,15 +56,13 @@ class CategoriesWidget extends StatelessWidget {
                     final category = categories[index];
                     return Container(
                       decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.circular(5)),
+                          color: Colors.black26, borderRadius: BorderRadius.circular(5)),
                       child: InkWell(
                         onTap: () {
-                          context.read<ProductsBloc>().add(
-                              GetProductByCategoryEvent(
-                                  categoryId: category.id));
-                          Navigator.of(context)
-                              .pushNamed('/categories/product_by_category');
+                          context
+                              .read<ProductsBloc>()
+                              .add(GetProductByCategoryEvent(categoryId: category.id));
+                          Navigator.of(context).pushNamed('/categories/product_by_category');
                         },
                         child: DecoratedBox(
                           decoration: BoxDecoration(
@@ -76,11 +76,8 @@ class CategoriesWidget extends StatelessWidget {
                                   ? CachedNetworkImage(
                                       imageUrl: category.getCategoryImage(),
                                       placeholder: (context, url) =>
-                                          const Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
+                                          const Center(child: CircularProgressIndicator()),
+                                      errorWidget: (context, url, error) => const Icon(Icons.error),
                                       height: 80,
                                     )
                                   : const Text(""),

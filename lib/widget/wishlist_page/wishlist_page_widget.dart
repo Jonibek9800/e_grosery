@@ -1,5 +1,6 @@
 import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit.dart';
 import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit_state.dart';
+import 'package:el_grocer/routes/routes.dart';
 import 'package:el_grocer/widget/ui/product_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,14 +12,12 @@ class WishlistPageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FavoriteCubit, FavoriteCubitState>(
-        builder: (BuildContext context, state) {
+    return BlocBuilder<FavoriteCubit, FavoriteCubitState>(builder: (BuildContext context, state) {
       final favoriteModel = state.favoriteModel;
       debugPrint("${favoriteModel?.favoriteList}");
       return Scaffold(
           appBar: PreferredSize(
-              preferredSize:
-                  Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
+              preferredSize: Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
               child: AppBarWidget(
                 readOnly: true,
                 onTap: () {
@@ -30,6 +29,9 @@ class WishlistPageWidget extends StatelessWidget {
                   // style: TextStyle(color: Color(0xFF56AE7C)),
                 ),
                 implyLeading: false,
+                voiceCallback: () {
+                  Navigator.of(context).pushNamed(MainNavigationRouteNames.searchPage);
+                },
               )),
           body: favoriteModel?.favoriteList?.length == 0
               ? const Center(

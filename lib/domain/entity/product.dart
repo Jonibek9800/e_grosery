@@ -1,6 +1,6 @@
-import 'package:el_grocer/configuration/configuration.dart';
 import 'package:el_grocer/domain/api_client/product_api.dart';
-import 'package:el_grocer/domain/entity/category.dart';
+
+import '../api_client/favorite_api.dart';
 
 class Product {
   int? id;
@@ -12,17 +12,18 @@ class Product {
   int? favorite;
   String? createdAt;
   String? updatedAt;
+  bool isInFavorite = false, checkFavoriteInServer = false;
 
   Product(
       {required this.id,
-        this.posterPath,
-        this.name,
-        required this.price,
-        this.description,
-        required this.categoryId,
-        this.favorite,
-        this.createdAt,
-        this.updatedAt});
+      this.posterPath,
+      this.name,
+      required this.price,
+      this.description,
+      required this.categoryId,
+      this.favorite,
+      this.createdAt,
+      this.updatedAt});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -51,6 +52,15 @@ class Product {
   }
 
   String getImage() {
-    return ProductApiClient().getImage( posterPath);
+    return ProductApiClient().getImage(posterPath);
+  }
+
+  Future<void> getIsFavorite(int userId) async {
+
+    checkFavoriteInServer = true;
+    var data = await FavoriteApi.setFavoriteProduct(
+        userId: userId, productId: id, deleting: isInFavorite);
+    if (data.containsKey('error')) isInFavorite = !isInFavorite;
+    checkFavoriteInServer = false;
   }
 }

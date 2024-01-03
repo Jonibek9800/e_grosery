@@ -30,12 +30,10 @@ class HomePageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final address =
-        context.read<LocationCubit>().state.locationCubitModel.address;
+    final address = context.read<LocationCubit>().state.locationCubitModel.address;
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize:
-                Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
+            preferredSize: Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
             child: AppBarWidget(
               readOnly: true,
               onTap: () {
@@ -44,8 +42,7 @@ class HomePageWidget extends StatelessWidget {
               autofocus: false,
               appbarTitle: TextButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(MainNavigationRouteNames.location);
+                  Navigator.of(context).pushNamed(MainNavigationRouteNames.location);
                 },
                 child: Row(
                   children: [
@@ -69,10 +66,11 @@ class HomePageWidget extends StatelessWidget {
                 ),
               ),
               leadingWidth: 150.0,
-              implyLeading: true,
+              implyLeading: true, voiceCallback: () {
+                Navigator.of(context).pushNamed(MainNavigationRouteNames.searchPage);
+            },
             )),
-        body: BlocBuilder<CategoriesBloc, CategoriesState>(
-            builder: (BuildContext context, state) {
+        body: BlocBuilder<CategoriesBloc, CategoriesState>(builder: (BuildContext context, state) {
           return ListView(
             children: [
               const SizedBox(
@@ -95,8 +93,7 @@ class HomePageWidget extends StatelessWidget {
                   return Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image(
@@ -121,9 +118,7 @@ class HomePageWidget extends StatelessWidget {
                           sectionName: "Categories",
                           shopBy: "Shop by categories",
                           delegateClick: () {
-                            context
-                                .read<MainBloc>()
-                                .add(NextPageBlocEvent(index: index));
+                            context.read<MainBloc>().add(NextPageBlocEvent(index: index));
                           }),
                     ),
                   );
@@ -134,9 +129,7 @@ class HomePageWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Card(
                   child: _SectionNameWidget(
-                      sectionName: "Brands",
-                      shopBy: "Shop by brands",
-                      delegateClick: () {}),
+                      sectionName: "Brands", shopBy: "Shop by brands", delegateClick: () {}),
                 ),
               ),
               Padding(
@@ -150,18 +143,17 @@ class HomePageWidget extends StatelessWidget {
                       shrinkWrap: true,
                       primary: false,
                       padding: const EdgeInsets.all(20),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                         crossAxisCount: 3,
                       ),
                       itemCount: 9,
                       itemBuilder: (BuildContext context, int index) {
+                        final intIndex = index;
                         return Container(
                             decoration: BoxDecoration(
-                                color: Colors.teal,
-                                borderRadius: BorderRadius.circular(10)),
+                                color: Colors.teal, borderRadius: BorderRadius.circular(10)),
                             child: const Text(
                               "Brands",
                               // style: TextStyle(color: Colors.white),
@@ -251,8 +243,7 @@ class _CategoriesWidget extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  color: const Color(0xFF212934),
-                  borderRadius: BorderRadius.circular(10)),
+                  color: const Color(0xFF212934), borderRadius: BorderRadius.circular(10)),
               child: GridView.builder(
                   shrinkWrap: true,
                   itemCount: 6,
@@ -286,8 +277,7 @@ class _CategoriesWidget extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     // primary: false,
                     padding: const EdgeInsets.all(10),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                       crossAxisCount: 3,
@@ -296,15 +286,13 @@ class _CategoriesWidget extends StatelessWidget {
                       final category = categories[index];
                       return Container(
                         decoration: BoxDecoration(
-                            color: Colors.black26,
-                            borderRadius: BorderRadius.circular(5)),
+                            color: Colors.black26, borderRadius: BorderRadius.circular(5)),
                         child: InkWell(
                           onTap: () {
-                            context.read<ProductsBloc>().add(
-                                GetProductByCategoryEvent(
-                                    categoryId: category.id));
-                            Navigator.of(context)
-                                .pushNamed('/categories/product_by_category');
+                            context
+                                .read<ProductsBloc>()
+                                .add(GetProductByCategoryEvent(categoryId: category.id));
+                            Navigator.of(context).pushNamed('/categories/product_by_category');
                           },
                           child: DecoratedBox(
                             decoration: BoxDecoration(
@@ -318,9 +306,7 @@ class _CategoriesWidget extends StatelessWidget {
                                     ? CachedNetworkImage(
                                         imageUrl: category.getCategoryImage(),
                                         placeholder: (context, url) =>
-                                            const Center(
-                                                child:
-                                                    CircularProgressIndicator()),
+                                            const Center(child: CircularProgressIndicator()),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
                                         height: 80,
@@ -366,168 +352,136 @@ class _ScrollBarListProductWidget extends StatelessWidget {
           itemCount: productList.length,
           itemBuilder: (BuildContext context, int index) {
             final product = productList[index];
-            IconData? icon = (context
-                    .read<FavoriteCubit>()
-                    .state
-                    .favoriteModel
-                    .isFavorite(product.id)
-                ? Icons.favorite
-                : Icons.favorite_border);
-            return Card(
-              child: Container(
-                  width: 170,
-                  // margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                  decoration: BoxDecoration(
-                      // color: const Color(0xFF212934),
-                      borderRadius: BorderRadius.circular(10)),
-                  // padding: EdgeInsets.all(10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
+            return InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .pushNamed(MainNavigationRouteNames.productCard, arguments: product);
+              },
+              child: Card(
+                child: Container(
+                    width: 170,
+                    // margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    decoration: BoxDecoration(
+                        // color: const Color(0xFF212934),
+                        borderRadius: BorderRadius.circular(10)),
+                    // padding: EdgeInsets.all(10),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: product.getImage(),
+                              placeholder: (context, url) =>
+                                  const Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                              height: 160,
+                              width: 200,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          BlocBuilder<FavoriteCubit, FavoriteCubitState>(
+                              builder: (BuildContext context, state) {
+                            return Positioned(
+                                right: 0,
+                                top: 5,
+                                child: IconButton(
+                                  onPressed: () {
+                                    final user = context.read<AuthBloc>().state.authModel.user;
+                                    context
+                                        .read<FavoriteCubit>()
+                                        .toggleFavorite(user?['id'], product);
+                                  },
+                                  icon: Icon(
+                                    product.isInFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: ThemeColor.greenColor,
+                                  ),
+                                ));
+                          })
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "${product.name}",
+                          // style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
+                        child: Row(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: CachedNetworkImage(
-                                imageUrl: product.getImage(),
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                height: 160,
-                                width: 200,
-                                fit: BoxFit.fill,
+                            Expanded(
+                              child: Text(
+                                "\$${product.price}",
+                                // style: const TextStyle(color: Colors.white),
                               ),
                             ),
-                            BlocBuilder<FavoriteCubit, FavoriteCubitState>(
-                                builder: (BuildContext context, state) {
-                              return Positioned(
-                                  right: 0,
-                                  top: 5,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      final user = context
-                                          .read<AuthBloc>()
-                                          .state
-                                          .authModel
-                                          .user;
-                                      context
-                                          .read<FavoriteCubit>()
-                                          .toggleFavorite(user?['id'], product);
-                                    },
-                                    icon: Icon(
-                                      context
-                                              .read<FavoriteCubit>()
-                                              .state
-                                              .favoriteModel
-                                              .isFavorite(product.id)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: ThemeColor.greenColor,
-                                    ),
-                                  ));
-                            })
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "${product.name}",
-                            // style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 7),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "\$${product.price}",
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 1,
+                        color: const Color(0xFF151A20),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: BlocBuilder<CartBloc, CartBlocState>(
+                            builder: (BuildContext context, state) {
+                          if (state.cartBlocModel.isAddToCart(product)) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                state.cartBlocModel.productQuantity == 1
+                                    ? TextButton(
+                                        onPressed: () {
+                                          context
+                                              .read<CartBloc>()
+                                              .add(RemoveFromCartEvent(product: product));
+                                        },
+                                        child: const Icon(
+                                          Icons.delete,
+                                          // color: Colors.green,
+                                        ))
+                                    : TextButton(
+                                        onPressed: () => context
+                                            .read<CartBloc>()
+                                            .add(RemoveQuantityEvent(product: product)),
+                                        child: const Icon(
+                                          Icons.remove,
+                                          // color: Colors.green,
+                                        ),
+                                      ),
+                                Text(
+                                  "${state.cartBlocModel.productQuantity}",
                                   // style: const TextStyle(color: Colors.white),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: const Color(0xFF151A20),
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: BlocBuilder<CartBloc, CartBlocState>(
-                              builder: (BuildContext context, state) {
-                            if (state.cartBlocModel.isAddToCart(product)) {
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  state.cartBlocModel.productQuantity == 1
-                                      ? TextButton(
-                                          onPressed: () {
-                                            context.read<CartBloc>().add(
-                                                RemoveFromCartEvent(
-                                                    product: product));
-                                          },
-                                          child: const Icon(
-                                            Icons.delete,
-                                            // color: Colors.green,
-                                          ))
-                                      : TextButton(
-                                          onPressed: () => context
-                                              .read<CartBloc>()
-                                              .add(RemoveQuantityEvent(
-                                                  product: product)),
-                                          child: const Icon(
-                                            Icons.remove,
-                                            // color: Colors.green,
-                                          ),
-                                        ),
-                                  Text(
-                                    "${state.cartBlocModel.productQuantity}",
-                                    // style: const TextStyle(color: Colors.white),
+                                TextButton(
+                                  onPressed: () => context
+                                      .read<CartBloc>()
+                                      .add(AddQuantityEvent(product: product)),
+                                  child: const Icon(
+                                    Icons.add,
+                                    // color: Colors.green,
                                   ),
-                                  TextButton(
-                                    onPressed: () => context
-                                        .read<CartBloc>()
-                                        .add(
-                                            AddQuantityEvent(product: product)),
-                                    child: const Icon(
-                                      Icons.add,
-                                      // color: Colors.green,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return TextButton(
-                                  onPressed: () {
-                                    // final user = context
-                                    //     .read<AuthBloc>()
-                                    //     .state
-                                    //     .authModel
-                                    //     .user;
-                                    // if (user != null) {
-                                    context
-                                        .read<CartBloc>()
-                                        .add(AddCartEvent(product: product));
-                                    // } else {
-                                    //   showDialog(
-                                    //       context: context,
-                                    //       builder: (_) =>
-                                    //           const AlertDialogWidget());
-                                    // }
-                                  },
-                                  child: const Text(
-                                    "Add to Cart",
-                                    // style: TextStyle(color: Colors.white),
-                                  ));
-                            }
-                          }),
-                        )
-                      ])),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return TextButton(
+                                onPressed: () {
+                                  context.read<CartBloc>().add(AddCartEvent(product: product));
+                                },
+                                child: const Text(
+                                  "Add to Cart",
+                                  // style: TextStyle(color: Colors.white),
+                                ));
+                          }
+                        }),
+                      )
+                    ])),
+              ),
             );
           }),
     );
@@ -542,9 +496,7 @@ class _SectionNameWidget extends StatelessWidget {
   final Function delegateClick;
 
   const _SectionNameWidget(
-      {required this.sectionName,
-      required this.shopBy,
-      required this.delegateClick});
+      {required this.sectionName, required this.shopBy, required this.delegateClick});
 
   @override
   Widget build(BuildContext context) {
@@ -558,8 +510,7 @@ class _SectionNameWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 sectionName,
                 style: const TextStyle(color: Color(0xFF56AE7C)),
@@ -573,8 +524,8 @@ class _SectionNameWidget extends StatelessWidget {
             },
             style: ButtonStyle(
                 shadowColor: MaterialStateProperty.all(const Color(0xFF56AE7C)),
-                backgroundColor: MaterialStateProperty.all(
-                    const Color.fromRGBO(86, 174, 124, 0.3))),
+                backgroundColor:
+                    MaterialStateProperty.all(const Color.fromRGBO(86, 174, 124, 0.3))),
             child: const Text(
               "View All",
               // style: TextStyle(color: Colors.white),

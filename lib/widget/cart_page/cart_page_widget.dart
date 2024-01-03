@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/blocs/cart_blocs/cart_bloc_event.dart';
 import '../../domain/blocs/favorite_cubit/favorite_cubit.dart';
+import '../../domain/blocs/favorite_cubit/favorite_cubit_state.dart';
+import '../../domain/blocs/themes/themes_model.dart';
 
 class CartPageWidget extends StatelessWidget {
   const CartPageWidget({super.key});
@@ -83,142 +85,157 @@ class CartPageWidget extends StatelessWidget {
                       itemCount: products.length,
                       itemBuilder: (BuildContext context, int index) {
                         final cartProduct = products[index];
-                        final user =
-                            context.read<AuthBloc>().state.authModel.user;
-                        final favoriteCubit = context.read<FavoriteCubit>();
-
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 5),
-                          child: Card(
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                  // color: const Color(0xFF212934),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: CachedNetworkImage(
-                                      imageUrl: cartProduct.product!.getImage(),
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                      height: 150,
-                                      width: 130,
-                                      fit: BoxFit.fill,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                MainNavigationRouteNames.productCard,
+                                arguments: cartProduct.product,
+                              );
+                            },
+                            child: Card(
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                    // color: const Color(0xFF212934),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: cartProduct.product!.getImage(),
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                        height: 150,
+                                        width: 130,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                            cartProduct.product?.name ?? "",
+                                            // style: const TextStyle(
+                                            //     color: Colors.white),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "\$${cartProduct.product?.price}",
+                                            style: const TextStyle(
+                                                color: Color(0xFF56AE7C)),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            cartProduct.product?.description ??
+                                                '',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            // style: const TextStyle(
+                                            //     color: Colors.white),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
+                                        BlocBuilder<FavoriteCubit, FavoriteCubitState>(
+                                            builder: (BuildContext context, state) {
+                                              return IconButton(
+                                                onPressed: () {
+                                                  final user = context
+                                                      .read<AuthBloc>()
+                                                      .state
+                                                      .authModel
+                                                      .user;
+                                                  context
+                                                      .read<FavoriteCubit>()
+                                                      .toggleFavorite(user?['id'], cartProduct.product);
+                                                },
+                                                icon: Icon(
+                                                  cartProduct.product!.isInFavorite
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  color: ThemeColor.greenColor,
+                                                ),
+                                              );
+                                            }),
                                         const SizedBox(
-                                          height: 20,
+                                          height: 40,
                                         ),
-                                        Text(
-                                          cartProduct.product?.name ?? "",
-                                          // style: const TextStyle(
-                                          //     color: Colors.white),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          "\$${cartProduct.product?.price}",
-                                          style: const TextStyle(
-                                              color: Color(0xFF56AE7C)),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          cartProduct.product?.description ??
-                                              '',
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          // style: const TextStyle(
-                                          //     color: Colors.white),
-                                        )
+                                        BlocBuilder<CartBloc, CartBlocState>(
+                                            builder:
+                                                (BuildContext context, state) {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              cartProduct.quantity == 1
+                                                  ? TextButton(
+                                                      onPressed: () {
+                                                        context.read<CartBloc>().add(
+                                                            RemoveFromCartEvent(
+                                                                product:
+                                                                    cartProduct
+                                                                        .product));
+                                                      },
+                                                      child: const Icon(
+                                                        Icons.delete,
+                                                        color: Color(0xFF56AE7C),
+                                                      ))
+                                                  : TextButton(
+                                                      onPressed: () => context
+                                                          .read<CartBloc>()
+                                                          .add(RemoveQuantityEvent(
+                                                              product: cartProduct
+                                                                  .product)),
+                                                      child: const Icon(
+                                                        Icons.remove,
+                                                        color: Color(0xFF56AE7C),
+                                                      ),
+                                                    ),
+                                              Text(
+                                                "${cartProduct.quantity}",
+                                                // style: const TextStyle(
+                                                //     color: Colors.white),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => context
+                                                    .read<CartBloc>()
+                                                    .add(AddQuantityEvent(
+                                                        product:
+                                                            cartProduct.product)),
+                                                child: const Icon(
+                                                  Icons.add,
+                                                  color: Color(0xFF56AE7C),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }),
                                       ],
                                     ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      IconButton(
-                                          onPressed: () {
-                                            favoriteCubit.toggleFavorite(
-                                                user?['id'],
-                                                cartProduct.product);
-                                          },
-                                          icon: const Icon(
-                                            Icons.favorite_border,
-                                            color: Color(0xFF56AE7C),
-                                          )),
-                                      const SizedBox(
-                                        height: 40,
-                                      ),
-                                      BlocBuilder<CartBloc, CartBlocState>(
-                                          builder:
-                                              (BuildContext context, state) {
-                                        return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            cartProduct.quantity == 1
-                                                ? TextButton(
-                                                    onPressed: () {
-                                                      context.read<CartBloc>().add(
-                                                          RemoveFromCartEvent(
-                                                              product:
-                                                                  cartProduct
-                                                                      .product));
-                                                    },
-                                                    child: const Icon(
-                                                      Icons.delete,
-                                                      color: Color(0xFF56AE7C),
-                                                    ))
-                                                : TextButton(
-                                                    onPressed: () => context
-                                                        .read<CartBloc>()
-                                                        .add(RemoveQuantityEvent(
-                                                            product: cartProduct
-                                                                .product)),
-                                                    child: const Icon(
-                                                      Icons.remove,
-                                                      color: Color(0xFF56AE7C),
-                                                    ),
-                                                  ),
-                                            Text(
-                                              "${cartProduct.quantity}",
-                                              // style: const TextStyle(
-                                              //     color: Colors.white),
-                                            ),
-                                            TextButton(
-                                              onPressed: () => context
-                                                  .read<CartBloc>()
-                                                  .add(AddQuantityEvent(
-                                                      product:
-                                                          cartProduct.product)),
-                                              child: const Icon(
-                                                Icons.add,
-                                                color: Color(0xFF56AE7C),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),

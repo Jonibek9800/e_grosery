@@ -9,12 +9,12 @@ class Favorite {
   String? updatedAt;
 
   Favorite({
-    required this.id,
+    this.id,
     required this.userId,
     required this.productId,
     required this.product,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   Favorite.fromJson(Map<String, dynamic> json) {
