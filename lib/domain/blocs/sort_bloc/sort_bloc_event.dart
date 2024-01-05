@@ -2,32 +2,35 @@ import 'package:el_grocer/domain/blocs/sort_bloc/sort_bloc.dart';
 
 class SortBlocEvent {}
 
-class DefaultSortBlocEvent extends SortBlocEvent {
-  SortState? defaultSort;
+class InitSortCubitEvent extends SortBlocEvent{}
 
-  DefaultSortBlocEvent({required this.defaultSort});
+class SortBySearchBlocEvent extends SortBlocEvent {
+  SortState? sortName;
+  // String? sortMethod;
+
+  SortBySearchBlocEvent({required this.sortName});
 }
 
-class NewestSortBlocEvent extends SortBlocEvent {
-  SortState? newest;
+class SortByAllProductBlocEvent extends SortBlocEvent {
+  SortState? sortName;
 
-  NewestSortBlocEvent({required this.newest});
+  SortByAllProductBlocEvent({required this.sortName});
 }
-
-class OldestSortBlocEvent extends SortBlocEvent {
-  SortState? oldest;
-
-  OldestSortBlocEvent({required this.oldest});
-}
-
-class HighToLowSortBlocEvent extends SortBlocEvent {
-  SortState? highToLow;
-
-  HighToLowSortBlocEvent({required this.highToLow});
-}
-
-class LowToHighSortBlocEvent extends SortBlocEvent {
-  SortState? lowToHigh;
-
-  LowToHighSortBlocEvent({required this.lowToHigh});
-}
+//
+// class OldestSortBlocEvent extends SortBlocEvent {
+//   SortState? oldest;
+//
+//   OldestSortBlocEvent({required this.oldest});
+// }
+//
+// class HighToLowSortBlocEvent extends SortBlocEvent {
+//   SortState? highToLow;
+//
+//   HighToLowSortBlocEvent({required this.highToLow});
+// }
+//
+// class LowToHighSortBlocEvent extends SortBlocEvent {
+//   SortState? lowToHigh;
+//
+//   LowToHighSortBlocEvent({required this.lowToHigh});
+// }

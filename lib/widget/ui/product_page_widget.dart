@@ -19,6 +19,8 @@ class ProductPageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isFavorite = context.read<FavoriteCubit>().state.favoriteModel.isFavorite(product);
+    if (isFavorite) product?.isInFavorite = true;
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(

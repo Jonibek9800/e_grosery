@@ -35,13 +35,14 @@ class FavoriteCubit extends Cubit<FavoriteCubitState> {
   }
 
   void getFavorite(userId) async {
+    Product product;
     try {
       final current = state.favoriteModel;
       final data = await FavoriteApi.getFavoriteProducts(userId: userId);
       debugPrint("success from get request: ${data["favorite_products"]}");
       List<dynamic> favoritesList = data['favorite_products'];
       for (var favorite in favoritesList) {
-        current?.favoriteList?.add(Favorite.fromJson(favorite));
+        current.favoriteList.add(Favorite.fromJson(favorite));
       }
 
       emit(InitialFavoriteState(favoriteModel: current));

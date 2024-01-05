@@ -66,9 +66,10 @@ class HomePageWidget extends StatelessWidget {
                 ),
               ),
               leadingWidth: 150.0,
-              implyLeading: true, voiceCallback: () {
+              implyLeading: true,
+              voiceCallback: () {
                 Navigator.of(context).pushNamed(MainNavigationRouteNames.searchPage);
-            },
+              },
             )),
         body: BlocBuilder<CategoriesBloc, CategoriesState>(builder: (BuildContext context, state) {
           return ListView(
@@ -150,7 +151,6 @@ class HomePageWidget extends StatelessWidget {
                       ),
                       itemCount: 9,
                       itemBuilder: (BuildContext context, int index) {
-                        final intIndex = index;
                         return Container(
                             decoration: BoxDecoration(
                                 color: Colors.teal, borderRadius: BorderRadius.circular(10)),
@@ -352,6 +352,9 @@ class _ScrollBarListProductWidget extends StatelessWidget {
           itemCount: productList.length,
           itemBuilder: (BuildContext context, int index) {
             final product = productList[index];
+            final isFavorite =
+                context.read<FavoriteCubit>().state.favoriteModel.isFavorite(product);
+            if (isFavorite) product.isInFavorite = true;
             return InkWell(
               onTap: () {
                 Navigator.of(context)

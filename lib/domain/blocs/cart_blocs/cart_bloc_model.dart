@@ -2,7 +2,6 @@ import 'package:el_grocer/domain/blocs/cart_blocs/cart_bloc_state.dart';
 import 'package:el_grocer/domain/entity/product_cart.dart';
 
 import '../../entity/check.dart';
-import '../../entity/check_details.dart';
 
 class CartBlocModel {
   List<ProductIdInCart> productInCart = [];

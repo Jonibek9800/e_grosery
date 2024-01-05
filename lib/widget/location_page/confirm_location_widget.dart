@@ -55,12 +55,15 @@ class ConfirmLocationWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     FloatingActionButton.small(
+                      heroTag: 'btn1',
                       onPressed: () {
                         context.read<LocationCubit>().zoomIn();
                       },
                       child: const Icon(Icons.add),
                     ),
                     FloatingActionButton.small(
+
+                      heroTag: "btn2",
                       onPressed: () {
                         context.read<LocationCubit>().zoomOut();
                       },

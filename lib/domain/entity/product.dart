@@ -56,10 +56,9 @@ class Product {
   }
 
   Future<void> getIsFavorite(int userId) async {
-
     checkFavoriteInServer = true;
-    var data = await FavoriteApi.setFavoriteProduct(
-        userId: userId, productId: id, deleting: isInFavorite);
+    var data =
+        await FavoriteApi.setFavoriteProduct(userId: userId, productId: id, deleting: isInFavorite);
     if (data.containsKey('error')) isInFavorite = !isInFavorite;
     checkFavoriteInServer = false;
   }

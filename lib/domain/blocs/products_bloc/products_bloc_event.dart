@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 abstract class ProductsBlocEvent {}
 
 class GetAllProductsEvent extends ProductsBlocEvent {}
@@ -37,6 +39,30 @@ class SpeechToTextControllerEvent extends ProductsBlocEvent {
 
   SpeechToTextControllerEvent({
     required this.text,
+    required this.sortName,
+    required this.sortMethod,
+  });
+}
+
+class SortingProductsEvent extends ProductsBlocEvent {
+  ScrollController? scrollController;
+  String? sortName;
+  String? sortMethod;
+
+  SortingProductsEvent({
+    this.scrollController,
+    required this.sortName,
+    required this.sortMethod,
+  });
+}
+
+class SortingProductsBySearchEvent extends ProductsBlocEvent {
+  ScrollController? scrollController;
+  String? sortName;
+  String? sortMethod;
+
+  SortingProductsBySearchEvent({
+    this.scrollController,
     required this.sortName,
     required this.sortMethod,
   });

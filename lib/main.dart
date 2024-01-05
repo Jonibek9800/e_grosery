@@ -3,6 +3,8 @@ import 'package:el_grocer/domain/api_client/network_client.dart';
 import 'package:el_grocer/domain/blocs/cart_blocs/cart_bloc.dart';
 import 'package:el_grocer/domain/blocs/categories_bloc/categories_bloc.dart';
 import 'package:el_grocer/domain/blocs/favorite_cubit/favorite_cubit.dart';
+import 'package:el_grocer/domain/blocs/list_state_cubit/product_list_cubit.dart';
+import 'package:el_grocer/domain/blocs/list_state_cubit/search_list_cubit.dart';
 import 'package:el_grocer/domain/blocs/location_cubit/location_cubit.dart';
 import 'package:el_grocer/domain/blocs/products_bloc/products_bloc.dart';
 import 'package:el_grocer/domain/blocs/sort_bloc/sort_bloc.dart';
@@ -34,6 +36,8 @@ void main() async {
     BlocProvider(create: (_) => LocationCubit()),
     BlocProvider(create: (_) => FavoriteCubit()),
     BlocProvider(create: (_) => SortBloc()),
+    BlocProvider(create: (_) => SearchListCubit()),
+    BlocProvider(create: (_) => ProductListCubit()),
   ], child: const MyApp()));
 }
 

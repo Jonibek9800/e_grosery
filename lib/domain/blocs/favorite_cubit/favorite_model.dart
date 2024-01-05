@@ -4,7 +4,7 @@ class FavoriteModel {
   List<Favorite> favoriteList = [];
   
   
-  bool isFavorite(productId) {
-    return favoriteList.any((element) => element.productId == productId);
+  bool isFavorite(product) {
+    return favoriteList.any((element) => element.productId == product.id);
   }
 }

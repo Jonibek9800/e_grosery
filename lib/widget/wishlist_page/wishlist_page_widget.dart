@@ -14,7 +14,7 @@ class WishlistPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FavoriteCubit, FavoriteCubitState>(builder: (BuildContext context, state) {
       final favoriteModel = state.favoriteModel;
-      debugPrint("${favoriteModel?.favoriteList}");
+      debugPrint("${favoriteModel.favoriteList}");
       return Scaffold(
           appBar: PreferredSize(
               preferredSize: Size(MediaQuery.of(context).size.width, kToolbarHeight * 2),
@@ -33,7 +33,7 @@ class WishlistPageWidget extends StatelessWidget {
                   Navigator.of(context).pushNamed(MainNavigationRouteNames.searchPage);
                 },
               )),
-          body: favoriteModel?.favoriteList?.length == 0
+          body: favoriteModel.favoriteList.isEmpty
               ? const Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -64,10 +64,10 @@ class WishlistPageWidget extends StatelessWidget {
                   ),
                 )
               : ListView.builder(
-                  itemCount: favoriteModel?.favoriteList?.length,
+                  itemCount: favoriteModel.favoriteList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final favorite = favoriteModel?.favoriteList?[index];
-                    return ProductPageWidget(product: favorite?.product);
+                    final favorite = favoriteModel.favoriteList[index];
+                    return ProductPageWidget(product: favorite.product);
                   }));
     });
   }

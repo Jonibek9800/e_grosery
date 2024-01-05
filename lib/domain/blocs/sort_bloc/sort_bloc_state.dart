@@ -11,24 +11,24 @@ class InitSortCubitState extends SortBlocState {
       : super(sortAndListCubitModel: sortAndListCubitModel);
 }
 
-class DefaultSortCubitState extends SortBlocState {
-  DefaultSortCubitState({required SortCubitModel sortAndListCubitModel})
+class SortedBySortCubitState extends SortBlocState {
+  SortedBySortCubitState({required SortCubitModel sortAndListCubitModel})
       : super(sortAndListCubitModel: sortAndListCubitModel);
 }
 
-class NewestSortCubitState extends SortBlocState {
-  NewestSortCubitState({required SortCubitModel sortAndListCubitModel})
+class SortByAllProductCubitState extends SortBlocState {
+  SortByAllProductCubitState({required SortCubitModel sortAndListCubitModel})
       : super(sortAndListCubitModel: sortAndListCubitModel);
 }
-class OldestSortCubitState extends SortBlocState {
-  OldestSortCubitState({required SortCubitModel sortAndListCubitModel})
-      : super(sortAndListCubitModel: sortAndListCubitModel);
-}
-class HighToLowSortCubitState extends SortBlocState {
-  HighToLowSortCubitState({required SortCubitModel sortAndListCubitModel})
-      : super(sortAndListCubitModel: sortAndListCubitModel);
-}
-class LowToHighSortCubitState extends SortBlocState {
-  LowToHighSortCubitState({required SortCubitModel sortAndListCubitModel})
-      : super(sortAndListCubitModel: sortAndListCubitModel);
-}
+// class OldestSortCubitState extends SortBlocState {
+//   OldestSortCubitState({required SortCubitModel sortAndListCubitModel})
+//       : super(sortAndListCubitModel: sortAndListCubitModel);
+// }
+// class HighToLowSortCubitState extends SortBlocState {
+//   HighToLowSortCubitState({required SortCubitModel sortAndListCubitModel})
+//       : super(sortAndListCubitModel: sortAndListCubitModel);
+// }
+// class LowToHighSortCubitState extends SortBlocState {
+//   LowToHighSortCubitState({required SortCubitModel sortAndListCubitModel})
+//       : super(sortAndListCubitModel: sortAndListCubitModel);
+// }

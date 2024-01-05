@@ -7,7 +7,7 @@ class ProductsBlocModel {
   final productsApiClient = ProductApiClient();
   FocusNode focusNode = FocusNode();
 
-  List<Product> productByCategory = [];
+  // List<Product> productByCategory = [];
   List<Product> allProducts = [];
   List<Product> limitProducts = [];
   List<Product> filteredProducts = [];

@@ -38,7 +38,7 @@ class ProductsByCategoryWidget extends StatelessWidget {
             )),
         body: BlocBuilder<ProductsBloc, ProductsBlocState>(
           builder: (BuildContext contexts, state) {
-            final products = state.productsBlocModel.productByCategory;
+            final products = state.productsBlocModel.allProducts;
             return Container(
               // color: const Color(0xFF151A20),
               child: ListView.builder(
